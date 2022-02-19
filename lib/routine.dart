@@ -32,7 +32,10 @@ class _routineState extends State<routine> {
                 padding: EdgeInsets.all(15.0),
                 child: SelectableText(
                   "Every 12 hours has state of each component to be send to home",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 233, 79, 55)),
                   textAlign: TextAlign.center,
                 ),
               ),

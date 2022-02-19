@@ -28,91 +28,99 @@ class _controlState extends State<control> {
       appBar: AppBar(
         title: Text("Control"),
       ),
-      body: StreamBuilder(
-          stream: info.doc(getCurrentUserId().toString()).snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.data != null) {
-              Map<String, dynamic> data = snapshot.data?.data();
-              // Map<String, dynamic> data =snapshot.data!.data() as Map<String, dynamic>;
-
-              return Center(
-                  child: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      '${data['Control 1']}',
-                      style: TextStyle(),
+      drawer: Drawer(),
+      body: FutureBuilder<DocumentSnapshot>(
+        future: info.doc(getCurrentUserId()).get(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Text('Somthing went wrong');
+          }
+          if (snapshot.hasData && !snapshot.data!.exists) {
+            return Text('Document des not exist');
+          }
+          if (snapshot.connectionState == ConnectionState.done) {
+            Map<String, dynamic> data =
+                snapshot.data!.data() as Map<String, dynamic>;
+            return Center(
+                child: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    '${data['Control 1']}',
+                    style: TextStyle(),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: ToggleSwitch(
+                      minWidth: 90.0,
+                      cornerRadius: 50.0,
+                      activeBgColors: [
+                        [Colors.green[800]!],
+                        [Colors.red[800]!]
+                      ],
+                      animate: true,
+                      activeFgColor: Colors.white,
+                      inactiveBgColor: Colors.grey,
+                      inactiveFgColor: Colors.white,
+                      initialLabelIndex: 1,
+                      totalSwitches: 2,
+                      labels: ['ON', 'OFF'],
+                      radiusStyle: true,
+                      onToggle: (index) {
+                        // print('switched to: $index');
+                        if (index == 0) {
+                          msgch1 = "Ch1_ON";
+                        } else if (index == 1) {
+                          msgch1 = "Ch1_OFF";
+                        }
+                      },
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: ToggleSwitch(
-                        minWidth: 90.0,
-                        cornerRadius: 50.0,
-                        activeBgColors: [
-                          [Colors.green[800]!],
-                          [Colors.red[800]!]
-                        ],
-                        animate: true,
-                        activeFgColor: Colors.white,
-                        inactiveBgColor: Colors.grey,
-                        inactiveFgColor: Colors.white,
-                        initialLabelIndex: 1,
-                        totalSwitches: 2,
-                        labels: const ['ON', 'OFF'],
-                        radiusStyle: true,
-                        onToggle: (index) {
-                          // print('switched to: $index');
-                          if (index == 0) {
-                            msgch1 = "Ch1_ON";
-                          } else if (index == 1) {
-                            msgch1 = "Ch1_OFF";
-                          }
-                        },
-                      ),
+                  ),
+                  Text(
+                    '${data['Control 2']}',
+                    style: TextStyle(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: ToggleSwitch(
+                      minWidth: 90.0,
+                      cornerRadius: 50.0,
+                      activeBgColors: [
+                        [Colors.green[800]!],
+                        [Colors.red[800]!]
+                      ],
+                      activeFgColor: Colors.white,
+                      inactiveBgColor: Colors.grey,
+                      inactiveFgColor: Colors.white,
+                      initialLabelIndex: 1,
+                      totalSwitches: 2,
+                      labels: ['ON', 'OFF'],
+                      radiusStyle: true,
+                      onToggle: (index) {
+                        if (index == 0) {
+                          msgch2 = "Ch2_ON";
+                        } else if (index == 1) {
+                          msgch2 = "Ch2_OFF";
+                        }
+                      },
                     ),
-                    Text(
-                      '${data['Control 2']}',
-                      style: TextStyle(),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: ToggleSwitch(
-                        minWidth: 90.0,
-                        cornerRadius: 50.0,
-                        activeBgColors: [
-                          [Colors.green[800]!],
-                          [Colors.red[800]!]
-                        ],
-                        activeFgColor: Colors.white,
-                        inactiveBgColor: Colors.grey,
-                        inactiveFgColor: Colors.white,
-                        initialLabelIndex: 1,
-                        totalSwitches: 2,
-                        labels: const ['ON', 'OFF'],
-                        radiusStyle: true,
-                        onToggle: (index) {
-                          if (index == 0) {
-                            msgch2 = "Ch2_ON";
-                          } else if (index == 1) {
-                            msgch2 = "Ch2_OFF";
-                          }
-                        },
-                      ),
-                    ),
-                    ElevatedButton(
-                        onPressed: () {
-                          num = data['Home Phone'];
-                          _sandSMS(msgch1, msgch2, num);
-                        },
-                        child: Text('save'))
-                  ],
-                ),
-              ));
-            }
-            return const CircularProgressIndicator();
-          }),
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        num = data['Home Phone'];
+                        _sandSMS(msgch1, msgch2, num);
+                      },
+                      child: Text('save'))
+                ],
+              ),
+            ));
+          }
+          return Center(child: CircularProgressIndicator());
+        },
+      ),
     );
   }
 
@@ -125,110 +133,3 @@ class _controlState extends State<control> {
     telephony.sendSms(to: phone, message: '$msg1:$msg2');
   }
 }
-
-// var aaa = MaterialApp(
-//   home: Scaffold(
-//     appBar: AppBar(
-//       title: Text("Control"),
-//     ),
-//     body: Center(
-//       child: Container(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             TextField(
-//               onChanged: (val) {
-//                 num = val;
-//               },
-//             ),
-//             Text("Ch1"),
-//             Padding(
-//               padding: const EdgeInsets.all(20.0),
-//               child: ToggleSwitch(
-//                 minWidth: 90.0,
-//                 cornerRadius: 50.0,
-//                 activeBgColors: [
-//                   [Colors.green[800]!],
-//                   [Colors.red[800]!]
-//                 ],
-//                 animate: true,
-//                 activeFgColor: Colors.white,
-//                 inactiveBgColor: Colors.grey,
-//                 inactiveFgColor: Colors.white,
-//                 initialLabelIndex: 1,
-//                 totalSwitches: 2,
-//                 labels: ['ON', 'OFF'],
-//                 radiusStyle: true,
-//                 onToggle: (index) {
-//                   // print('switched to: $index');
-//                   if (index == 0) {
-//                     msgch1 = "Ch1_ON";
-//                   } else if (index == 1) {
-//                     msgch1 = "Ch1_OFF";
-//                   }
-//                 },
-//               ),
-//             ),
-//             Text("Ch2"),
-//             Padding(
-//               padding: const EdgeInsets.all(20.0),
-//               child: ToggleSwitch(
-//                 minWidth: 90.0,
-//                 cornerRadius: 50.0,
-//                 activeBgColors: [
-//                   [Colors.green[800]!],
-//                   [Colors.red[800]!]
-//                 ],
-//                 activeFgColor: Colors.white,
-//                 inactiveBgColor: Colors.grey,
-//                 inactiveFgColor: Colors.white,
-//                 initialLabelIndex: 1,
-//                 totalSwitches: 2,
-//                 labels: ['ON', 'OFF'],
-//                 radiusStyle: true,
-//                 onToggle: (index) {
-//                   if (index == 0) {
-//                     msgch2 = "Ch2_ON";
-//                   } else if (index == 1) {
-//                     msgch2 = "Ch2_OFF";
-//                   }
-//                 },
-//               ),
-//             ),
-//             ElevatedButton(
-//                 onPressed: () {
-//                   _sandsmsch1(msgch1, msgch2);
-//                 },
-//                 child: Text('save'))
-//             // ToggleSwitch(
-//             //   minWidth: 90.0,
-//             //   minHeight: 70.0,
-//             //   initialLabelIndex: 0,
-//             //   cornerRadius: 20.0,
-//             //   activeFgColor: Colors.white,
-//             //   inactiveBgColor: Colors.grey,
-//             //   inactiveFgColor: Colors.white,
-//             //   totalSwitches: 2,
-//             //   icons: [
-//             //     Icon(Icons.person),
-//             //     // FontAwesomeIcons.solidLightbulb,
-//             //   ],
-//             //   iconSize: 30.0,
-//             //   activeBgColors: [
-//             //     [Colors.black45, Colors.black26],
-//             //     [Colors.yellow, Colors.orange]
-//             //   ],
-//             //   animate:
-//             //       true, // with just animate set to true, default curve = Curves.easeIn
-//             //   curve: Curves
-//             //       .bounceInOut, // animate must be set to true when using custom curve
-//             //   onToggle: (index) {
-//             //     print('switched to: $index');
-//             //   },
-//             // ),
-//           ],
-//         ),
-//       ),
-//     ),
-//   ),
-// );

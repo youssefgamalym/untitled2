@@ -3,7 +3,7 @@
     <uses-permission android:name="android.permission.SEND_SMS"/>
     <uses-permission android:name="android.permission.READ_SMS"/>
     <application
-        android:label="untitled2"
+        android:label="My House"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

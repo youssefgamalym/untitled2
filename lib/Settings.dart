@@ -22,7 +22,7 @@ class _SettingsState extends State<Settings> {
   final TextEditingController _ch1 = TextEditingController();
   final TextEditingController _ch2 = TextEditingController();
 
-  late String firstname, lastname, personalPhone, homePhone;
+  late String firstname = '', lastname = '', personalPhone = '', homePhone = '';
   String ch1 = 'Ch 1', ch2 = 'Ch 2';
 
   final CollectionReference info =

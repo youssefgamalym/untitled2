@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'main.dart';
@@ -32,11 +33,11 @@ class _homeState extends State<home> {
                     fontSize: 20,
                     fontWeight: FontWeight.bold)),
             centerTitle: true,
-            backgroundColor: Colors.deepPurpleAccent),
+            backgroundColor: Color.fromARGB(255, 240, 175, 84)),
         body: Container(
           height: high,
           width: widh,
-          color: Colors.blue,
+          color: Color.fromARGB(255, 160, 231, 229),
           child: SingleChildScrollView(
             child: Center(
               child: Column(
@@ -45,7 +46,7 @@ class _homeState extends State<home> {
                   SizedBox(
                     width: 350,
                     height: 300,
-                    child: Image.asset('images/3644294.jpg'),
+                    child: Image.asset('images/istockphoto.jpg'),
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(0, 50, 0, 8),
@@ -123,7 +124,7 @@ class _homeState extends State<home> {
                             _emaillogin.clear();
                             _passwordlogin.clear();
                           },
-                          child: const Text('Sing UP')),
+                          child: const Text('Sign UP')),
                       ElevatedButton(
                           onPressed: () async {
                             try {
@@ -144,7 +145,10 @@ class _homeState extends State<home> {
                           }
                           // Navigator.push(context,MaterialPageRoute(builder: (context) => login()));
                           ,
-                          child: const Text('Sign In')),
+                          child: const Text(
+                            'Sign In',
+                            style: TextStyle(),
+                          )),
                     ],
                   )
                 ],
